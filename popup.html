@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Domain Scanner</title>
+  <!-- Open connections to the lookup services while the popup loads. -->
+  <link rel="preconnect" href="https://dns.google" crossorigin />
+  <link rel="preconnect" href="https://cloudflare-dns.com" crossorigin />
+  <link rel="preconnect" href="https://api.certspotter.com" crossorigin />
+  <link rel="preconnect" href="https://rdap.arin.net" crossorigin />
+  <link rel="preconnect" href="https://ipwho.is" crossorigin />
+  <link rel="preconnect" href="https://rdap.verisign.com" crossorigin />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icons/icon32.png" alt="" width="20" height="20" />
+      <h1>Domain Scanner</h1>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="View">
+        <button id="viewNormal" class="seg-btn" aria-pressed="true">Normal</button>
+        <button id="viewDetailed" class="seg-btn" aria-pressed="false">Detailed</button>
+      </div>
+      <button id="rescan" class="ghost" hidden>Rescan</button>
+      <button id="openTab" class="ghost" title="Open in a full tab">Open in tab ↗</button>
+    </div>
+  </header>
+
+  <section class="input" id="inputPanel">
+    <textarea id="domains" rows="4" spellcheck="false"
+      placeholder="Enter domains or URLs, one per line (or separated by commas/spaces)&#10;example.com&#10;https://suspicious-site.xyz/login"></textarea>
+    <div class="actions">
+      <button id="scan" class="primary">Scan</button>
+      <button id="useTab" class="ghost">Use current tab</button>
+      <button id="clear" class="ghost">Clear</button>
+      <span class="spacer"></span>
+      <button id="exportCsv" class="ghost" disabled>Export CSV</button>
+      <button id="exportJson" class="ghost" disabled>Export JSON</button>
+    </div>
+    <div class="pipeline" aria-hidden="true">
+      WHOIS → DNS → HTTP → Redirects → Title → IP → Registrar &amp; Hosting (+ abuse contacts)
+    </div>
+  </section>
+
+  <p id="status" class="status" role="status"></p>
+  <main id="results"></main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

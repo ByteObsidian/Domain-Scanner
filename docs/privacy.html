@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domain Scanner Privacy Policy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --ground: #f5f7fb;
+    --surface: #ffffff;
+    --ink: #172033;
+    --muted: #5b6579;
+    --rule: #dde3ee;
+    --accent: #2f6fed;
+    --accent-soft: #e8effd;
+    --ok: #1f8a53;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #0f1420;
+      --surface: #161d2c;
+      --ink: #e4e9f2;
+      --muted: #97a2b8;
+      --rule: #273147;
+      --accent: #6f9cf5;
+      --accent-soft: #1b2745;
+      --ok: #4cc58a;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #0f1420;
+    --surface: #161d2c;
+    --ink: #e4e9f2;
+    --muted: #97a2b8;
+    --rule: #273147;
+    --accent: #6f9cf5;
+    --accent-soft: #1b2745;
+    --ok: #4cc58a;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 16px/1.65 var(--sans);
+    padding-inline: 20px;
+    padding-block: 48px 72px;
+  }
+  main { max-width: 68ch; margin: 0 auto; display: grid; gap: 36px; }
+
+  header { display: grid; gap: 10px; }
+  .product { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--accent); font-size: 15px; }
+  .product svg { flex: none; }
+  h1 { font-size: clamp(30px, 5vw, 40px); line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .updated { color: var(--muted); font-size: 14px; margin: 0; }
+  .lede { margin: 0; color: var(--muted); }
+
+  .promise {
+    background: var(--accent-soft);
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: grid;
+    gap: 10px;
+  }
+  .promise h2 { margin: 0; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .promise ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .promise li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; align-items: start; }
+  .promise li::before { content: "✓"; color: var(--ok); font-weight: 700; }
+
+  section { display: grid; gap: 12px; }
+  section h2 { font-size: 21px; margin: 0; line-height: 1.3; text-wrap: balance; }
+  section p, section ul { margin: 0; }
+  section ul { padding-left: 20px; display: grid; gap: 6px; }
+  strong { font-weight: 600; }
+  code, .host { font-family: var(--mono); font-size: 0.86em; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 11px 14px; vertical-align: top; }
+  th { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--rule); }
+  tr + tr td { border-top: 1px solid var(--rule); }
+  td:first-child { width: 36%; font-weight: 500; }
+  td .host { display: block; color: var(--muted); }
+
+
+  footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <div class="product">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="currentColor"/>
+        <g fill="none" stroke="#fff" stroke-width="1.6">
+          <circle cx="12" cy="12" r="6.5"/><ellipse cx="12" cy="12" rx="2.8" ry="6.5"/><line x1="5.5" y1="12" x2="18.5" y2="12"/>
+        </g>
+      </svg>
+      Domain Scanner · Chrome extension
+    </div>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: 28 September 2026</p>
+    <p class="lede">Domain Scanner shows public registration, DNS, hosting, SSL certificate and redirect information for a website, together with the abuse contacts of its registrar and hosting provider.</p>
+  </header>
+
+  <div class="promise">
+    <h2>In short</h2>
+    <ul>
+      <li>The developer does not collect, receive, store, sell or share any of your data.</li>
+      <li>No account, no analytics, no tracking.</li>
+      <li>Lookups go directly from your browser to public information services.</li>
+    </ul>
+  </div>
+
+  <section>
+    <h2>What the extension accesses</h2>
+    <ul>
+      <li><strong>The current tab's URL</strong>, only when you click the extension icon. It is used to decide which domain to scan and is shown to you in the results.</li>
+      <li><strong>Domains you type in</strong> to scan.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What is sent, and to whom</h2>
+    <p>To perform a scan, the extension sends the <strong>domain name</strong> (and, for hosting lookups, the domain's <strong>IP address</strong>) to the public services below. It does not send the full page URL, your identity or any browsing history.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Purpose</th><th scope="col">Service</th></tr></thead>
+        <tbody>
+          <tr><td>Domain registration (RDAP / WHOIS)</td><td>IANA <span class="host">data.iana.org</span>The domain's registry and registrar RDAP servers<br>rdap.org <span class="host">fallback</span></td></tr>
+          <tr><td>Registration data for domains without RDAP</td><td>NIC Uruguay public lookup <span class="host">dns2-edge.sva.antel.com.uy</span>who-dat WHOIS service <span class="host">who-dat.as93.net</span></td></tr>
+          <tr><td>IP address ownership</td><td>ARIN and the regional internet registries (RIPE NCC, APNIC, LACNIC, AFRINIC)<br>rdap.org <span class="host">fallback</span></td></tr>
+          <tr><td>DNS records</td><td>Google Public DNS <span class="host">dns.google</span>Cloudflare DNS <span class="host">cloudflare-dns.com</span></td></tr>
+          <tr><td>SSL certificates</td><td>Cert Spotter <span class="host">api.certspotter.com</span>crt.sh <span class="host">crt.sh</span></td></tr>
+          <tr><td>Hosting network and location</td><td>ipwho.is <span class="host">ipwho.is</span></td></tr>
+          <tr><td>HTTP status, page title, redirects</td><td>The website being scanned</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>These services receive each request directly from your browser, as with any web request, and handle it under their own privacy policies.</p>
+  </section>
+
+  <section>
+    <h2>What is stored on your device</h2>
+    <p>The extension uses Chrome's local extension storage for:</p>
+    <ul>
+      <li>your view preference (Normal or Detailed),</li>
+      <li>the most recent scan result, so it reappears when you reopen the popup,</li>
+      <li>a temporary cache of lookup results — 24 hours for registration and hosting data, 6 hours for SSL data — deleted automatically when it expires.</li>
+    </ul>
+    <p>This data never leaves your device. Clear it at any time with the <strong>Clear</strong> button in the extension, or by removing the extension.</p>
+  </section>
+
+  <section>
+    <h2>Network monitoring</h2>
+    <p>The extension uses Chrome's <code>webRequest</code> permission only to observe its <strong>own</strong> request to the website being scanned, in order to record redirects and the connected IP address. It does not monitor, block or modify your browsing.</p>
+  </section>
+
+  <section>
+    <h2>Abuse reports</h2>
+    <p>When you click <strong>Report</strong>, the extension opens your email program with a pre-filled message. Nothing is sent unless you send that email yourself.</p>
+  </section>
+
+  <section>
+    <h2>Changes to this policy</h2>
+    <p>Any changes will be published on this page with a new "Last updated" date.</p>
+  </section>
+
+
+  <footer>Domain Scanner is an independent browser extension. It uses only publicly available registration, DNS and certificate data.</footer>
+</main>
+
+</body>
+</html>
