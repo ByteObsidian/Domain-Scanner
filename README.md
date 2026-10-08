@@ -47,3 +47,7 @@ Pipeline per domain: **WHOIS → DNS → HTTP → Redirect detection → Page ti
 - `ipwho.is` is rate-limited on the free tier; provider falls back to the RDAP owner name.
 - Cert Spotter allows ~100 unauthenticated requests/hour (large domains use up to 5); the extension falls back to crt.sh, which is slower.
 - The certificate shown is the most recently issued valid one in CT logs, not necessarily the exact one the server presents (Chrome doesn't expose TLS details to extensions).
+
+## License
+
+This project is licensed under the [Apache License 2.0](./LICENSE).
