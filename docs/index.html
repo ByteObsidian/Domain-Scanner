@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domain Scanner</title>
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg: #f5f7fb; --card: #fff; --ink: #172033; --muted: #5b6579; --rule: #dde3ee; --accent: #2f6fed; }
+  @media (prefers-color-scheme: dark) {
+    :root { color-scheme: dark; --bg: #0f1420; --card: #161d2c; --ink: #e4e9f2; --muted: #97a2b8; --rule: #273147; --accent: #6f9cf5; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 40px 20px 64px; }
+  main { max-width: 860px; margin: 0 auto; display: grid; gap: 28px; }
+  header { display: flex; align-items: center; gap: 14px; }
+  header img { width: 48px; height: 48px; }
+  h1 { margin: 0; font-size: 32px; }
+  .lede { margin: 0; color: var(--muted); font-size: 18px; }
+  .banner { width: 100%; border-radius: 12px; border: 1px solid var(--rule); }
+  h2 { margin: 0 0 8px; font-size: 20px; }
+  ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .links a { padding: 8px 14px; border: 1px solid var(--rule); border-radius: 8px; background: var(--card); color: var(--accent); text-decoration: none; font-weight: 600; }
+  .links a:hover { border-color: var(--accent); }
+  footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); padding-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.png" alt="">
+    <h1>Domain Scanner</h1>
+  </header>
+  <p class="lede">A Chrome extension that shows who registered a website, who hosts it, and where to report it, in one click.</p>
+  <img class="banner" src="banner.png" alt="Domain Scanner popup showing registrar and hosting provider abuse contacts for github.com">
+
+  <section>
+    <h2>What it shows</h2>
+    <ul>
+      <li>Registrar and hosting provider, with their abuse email and phone</li>
+      <li>Domain creation and update dates, with a warning for newly registered domains</li>
+      <li>Page URL, redirects and page title</li>
+      <li>IP address, ASN and CDN / proxy detection</li>
+      <li>SSL certificate and MX (mail) records</li>
+      <li>Pre-filled abuse report emails, bulk scanning and CSV / JSON export</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Privacy</h2>
+    <p>No account, no analytics, no tracking. Lookups go directly from your browser to public registry and DNS services.</p>
+  </section>
+
+  <div class="links">
+    <a href="privacy.html">Privacy policy</a>
+  </div>
+
+  <footer>Domain Scanner uses only publicly available registration, DNS and certificate data.</footer>
+</main>
+</body>
+</html>
