@@ -231,6 +231,10 @@ const MULTI_SUFFIXES = new Set([
   'com.uy', 'org.uy', 'net.uy', 'edu.uy', 'gub.uy', 'mil.uy',
 ]);
 
+export function rootDomain(host) {
+  return registrableGuess(host);
+}
+
 function registrableGuess(host) {
   const l = host.split('.');
   if (l.length <= 2) return host;
@@ -890,9 +894,12 @@ async function settle(promise) {
 }
 
 // opts: { onStep(step, state), onUpdate(partialResult), fresh }  (fresh = bypass cache)
+// Registration, email (MX) and certificates are checked on the root domain; IP, hosting and HTTP on
+// the exact host, since a subdomain can point somewhere different from its root.
 export async function scanDomain(domain, opts = {}) {
   const { onStep = () => {}, onUpdate = () => {}, fresh = false } = typeof opts === 'function' ? { onStep: opts } : opts;
-  const result = { domain, scannedAt: new Date().toISOString() };
+  const root = registrableGuess(domain);
+  const result = { domain, rootDomain: root, scannedAt: new Date().toISOString() };
   const update = () => { result.cdn = detectCdn(result); onUpdate(result); };
   STEPS.forEach((s) => onStep(s, 'running'));
 
@@ -941,13 +948,26 @@ export async function scanDomain(domain, opts = {}) {
     update();
   });
 
-  const sslP = settle(certLookup(domain, fresh)).then((r) => {
+  // MX for the root domain (reuses the host's DNS answer when the host is the root).
+  const mxP = (root === domain
+    ? dnsP.then(() => (result.dns.ok ? { nxdomain: result.dns.data.nxdomain, records: result.dns.data.records.MX } : Promise.reject(new Error(result.dns.error))))
+    : dohQuery(root, 'MX').then((d) => ({
+      nxdomain: d.Status === 3,
+      records: uniq((d.Answer || []).filter((a) => a.type === DNS_TYPES.MX).map((a) => String(a.data))),
+    })))
+    .then((data) => ({ ok: true, data }), (e) => ({ ok: false, error: e?.message || 'MX lookup failed' }))
+    .then((r) => {
+      result.mx = { domain: root, ...r };
+      update();
+    });
+
+  const sslP = settle(certLookup(root, fresh)).then((r) => {
     result.ssl = r;
     onStep('ssl', r.ok ? (r.data.found ? 'ok' : 'warn') : 'fail');
     update();
   });
 
-  await Promise.all([whoisP, httpP, dnsP, hostingP, sslP]);
+  await Promise.all([whoisP, httpP, dnsP, mxP, hostingP, sslP]);
   result.cdn = detectCdn(result);
   return result;
 }

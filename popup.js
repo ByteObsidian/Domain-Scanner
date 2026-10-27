@@ -97,7 +97,8 @@ function buildReport(r, recipient) {
     'We are reporting the domain below, which appears to be involved in phishing / malicious activity. ' +
       'Please investigate and take appropriate action.',
     '',
-    `Domain: ${r.domain}`,
+    `Domain: ${rootOf(r)}`,
+    isSubdomain(r) ? `Host: ${r.domain}` : null,
     r.pageUrl ? `URL: ${r.pageUrl}` : x ? `URL: ${x.finalUrl}` : null,
     x && r.pageUrl && x.finalUrl !== r.pageUrl ? `Final URL: ${x.finalUrl}` : null,
     r.ip?.primary ? `IP address: ${r.ip.primary}` : null,
@@ -143,11 +144,15 @@ function cdnNote(r, h) {
   );
 }
 
+const rootOf = (r) => r.rootDomain || r.domain;
+const isSubdomain = (r) => rootOf(r) !== r.domain;
+
 // MX status: exists / null MX (RFC 7505, "0 .") / none. Returns null while DNS is pending.
 function mxStatus(r) {
-  if (!r.dns) return null;
-  if (!r.dns.ok) return { exists: null, label: 'Unknown (DNS lookup failed)', cls: 'fail', hosts: [] };
-  const hosts = r.dns.data.records.MX
+  const src = r.mx || (r.rootDomain ? null : r.dns);
+  if (!src) return null;
+  if (!src.ok) return { exists: null, label: 'Unknown (DNS lookup failed)', cls: 'fail', hosts: [] };
+  const hosts = (Array.isArray(src.data.records) ? src.data.records : src.data.records.MX)
     .map((v) => {
       const [pref, host = ''] = String(v).trim().split(/\s+/);
       return { pref: Number(pref), host: host.replace(/\.$/, '').toLowerCase() };
@@ -163,7 +168,8 @@ function mxLine(r) {
   if (!mx) return pending();
   const shown = mx.hosts.slice(0, 2).map((h) => h.host).join(', ');
   const more = mx.hosts.length > 2 ? ` +${mx.hosts.length - 2} more` : '';
-  return el('span', { class: `age ${mx.cls}` }, el('strong', { text: mx.label }), shown ? ` · ${shown}${more}` : null);
+  return el('span', { class: `age ${mx.cls}` }, el('strong', { text: mx.label }), shown ? ` · ${shown}${more}` : null,
+    isSubdomain(r) ? el('span', { class: 'sub', text: ` (for ${rootOf(r)})` }) : null);
 }
 
 const fmtDate = (s) => {
@@ -283,10 +289,20 @@ function urlRow(label, url) {
     copyBtn(url));
 }
 
+// Bare domain (no scheme, path or trailing slash) for pasting into other lookup tools.
+function domainRow(label, domain) {
+  return el('div', { class: 'url-row' },
+    el('span', { class: 'sub url-label', text: label }),
+    el('span', { class: 'url-value mono', title: domain, text: domain }),
+    copyBtn(domain));
+}
+
 function urlBox(r) {
   const x = r.http?.ok ? r.http.data : null;
   const start = r.pageUrl || x?.requestedUrl || `https://${r.domain}/`;
-  const rows = [urlRow(r.pageUrl ? 'Page URL' : 'URL', start)];
+  const rows = [domainRow('Domain', rootOf(r))];
+  if (isSubdomain(r)) rows.push(domainRow('Host', r.domain));
+  rows.push(urlRow(r.pageUrl ? 'Page URL' : 'URL', start));
   if (x && x.finalUrl !== start && x.finalUrl !== x.requestedUrl) rows.push(urlRow('Redirects to', x.finalUrl));
   return el('div', { class: 'box urls' }, ...rows);
 }
@@ -386,7 +402,7 @@ function buildSections(r) {
   if (r.ssl?.ok) {
     const s = r.ssl.data;
     const names = s.dnsNames.slice(0, 10);
-    out.push(section('SSL certificate', '', s.found ? kv([
+    out.push(section('SSL certificate', '', isSubdomain(r) ? el('div', { class: 'sub', text: `Checked for root domain ${rootOf(r)}` }) : null, s.found ? kv([
       ['Issuer (CA)', s.issuer],
       ['Issued', fmtDate(s.issued)],
       ['Expires', fmtDate(s.expires)],
@@ -453,6 +469,8 @@ function buildSections(r) {
 
     out.push(section('HTTP, redirects & title', 'wide', kv([
       ['Page title', h.title],
+      ['Domain', el('span', {}, el('span', { class: 'mono', text: rootOf(r) }), copyBtn(rootOf(r)))],
+      ['Host', isSubdomain(r) ? el('span', {}, el('span', { class: 'mono', text: r.domain }), copyBtn(r.domain)) : null],
       ['Page URL', r.pageUrl ? el('span', {}, safeLink(r.pageUrl), copyBtn(r.pageUrl)) : null],
       ['Requested URL', el('span', {}, safeLink(h.requestedUrl), copyBtn(h.requestedUrl))],
       ['Final URL', el('span', {}, safeLink(h.finalUrl), copyBtn(h.finalUrl))],
@@ -557,7 +575,7 @@ function download(name, content, type) {
 
 function toCsv(rows) {
   const cols = [
-    'domain', 'page_url', 'registrar', 'registrar_iana_id', 'registrar_abuse_email', 'registrar_abuse_phone',
+    'domain', 'host', 'page_url', 'registrar', 'registrar_iana_id', 'registrar_abuse_email', 'registrar_abuse_phone',
     'created', 'updated', 'expires', 'domain_age_days', 'new_domain', 'nameservers', 'ip', 'hosting_provider', 'asn', 'hosting_abuse_email',
     'hosting_abuse_phone', 'cdn', 'cdn_abuse_email', 'ssl_issuer', 'ssl_issued', 'ssl_expires', 'mx_exists', 'mx_records', 'http_status', 'final_url', 'redirected', 'redirect_chain', 'page_title', 'errors',
   ];
@@ -577,7 +595,7 @@ function toCsv(rows) {
       !r.http?.ok && r.http?.error, !r.hosting?.ok && r.hosting?.error, !r.ssl?.ok && r.ssl?.error,
     ].filter(Boolean).join(' | ');
     lines.push([
-      r.domain, r.pageUrl, w?.registrar.name, w?.registrar.ianaId, w?.registrar.abuseEmail, w?.registrar.abusePhone,
+      rootOf(r), r.domain, r.pageUrl, w?.registrar.name, w?.registrar.ianaId, w?.registrar.abuseEmail, w?.registrar.abusePhone,
       fmtDate(w?.created), fmtDate(w?.updated), fmtDate(w?.expires),
       domainAge(w?.created)?.days, w?.created ? (domainAge(w.created)?.isNew ? 'yes' : 'no') : '',
       w?.nameservers.join(' '), r.ip?.primary,
