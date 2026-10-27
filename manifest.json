@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Domain Scanner",
-  "version": "1.0.0",
-  "description": "WHOIS (RDAP), DNS, HTTP, redirect detection, page title, IP, registrar & hosting provider with abuse contacts.",
+  "version": "1.0.2",
+  "description": "Scan a domain for registration, DNS records, redirects, and hosting details.",
+  "homepage_url": "https://byteobsidian.github.io/Domain-Scanner/",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Domain Scanner",
