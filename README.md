@@ -9,6 +9,9 @@ Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/dom
 2. Click **Load unpacked** and select this folder.
 3. Pin the extension and click it. Use **Open in tab ↗** for bulk scans (a popup closes when it loses focus).
 
+## Releases
+To publish a GitHub Release with an installable extension ZIP, update the version in `manifest.json`, commit the change, and push a matching version tag (for example, `v1.0.3`). The release workflow packages the extension and attaches `domain-scanner-1.0.3.zip` to the release. The tag must match the manifest version.
+
 ## Data sources (no API keys needed)
 | Step | Source |
 |---|---|

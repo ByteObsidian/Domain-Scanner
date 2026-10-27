@@ -1,0 +1,42 @@
+name: Create extension release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Package extension and create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          VERSION="$(jq -r '.version' manifest.json)"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "Tag $TAG does not match manifest version $VERSION" >&2
+            exit 1
+          fi
+
+          ARCHIVE="domain-scanner-${VERSION}.zip"
+          mkdir -p package
+          cp manifest.json popup.html popup.css popup.js scanner.js package/
+          cp -R data icons package/
+          (
+            cd package
+            zip -r "../$ARCHIVE" manifest.json popup.html popup.css popup.js scanner.js data icons
+          )
+
+          gh release create "$TAG" "$ARCHIVE" \
+            --title "Domain Scanner $TAG" \
+            --generate-notes
