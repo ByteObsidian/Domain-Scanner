@@ -3,6 +3,8 @@
 Pipeline per domain: **WHOIS → DNS → HTTP → Redirect detection → Page title → IP → Registrar & Hosting provider (with abuse emails)**.
 
 ## Install
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/domain-scanner/edflhkopndibneimacepaljbplpejoda), or:
+
 1. Open `chrome://extensions`, enable **Developer mode**.
 2. Click **Load unpacked** and select this folder.
 3. Pin the extension and click it. Use **Open in tab ↗** for bulk scans (a popup closes when it loses focus).
